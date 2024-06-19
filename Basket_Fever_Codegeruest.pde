@@ -17,6 +17,9 @@ float movementSpeed;
 boolean ballThrown = false;
 boolean throwFalsy = false;
 
+// Assets
+
+PFont font;
 PImage background;
 PImage ball;
 PImage goal;
@@ -52,22 +55,26 @@ class Circle {
   void display() {
     fill(255);
     image(goal, areaPositionX - areaSize / 2, areaPositionY - areaSize / 2, areaSize, areaSize);
-    fill(0,0,0);
+    fill(255);
     textSize(16);
     textAlign(CENTER, CENTER);
-    text(areaText, areaPositionX, areaPositionY);
+    textFont(font);
+    text(areaText, areaPositionX, areaPositionY - 30);
     textAlign(BASELINE);
   }
 }
 
 void setup() {
   size(400, 600);
+  font = createFont("Arial", 16);
   background = loadImage("background.png");
   ball = loadImage("Basketball.png");
 }
 
 void draw() {
   image(background, 0, 0, 400, 600);
+  fill(0, 0, 0, 180);
+  rect(0, 0, width, height);
 
   // zielwurfzonen
   drawCircles();
@@ -76,7 +83,9 @@ void draw() {
   drawText();
 
   // wurfline
+  stroke(255, 0, 0);
   line(0, height / 2, 1000, 300);
+  stroke(0);
 
   // ball zeichnen
   drawBall();
@@ -146,6 +155,7 @@ void mousePressed() {
     return;
   }
   mouseYStart = mouseY;
+  
 }
 
 void mouseDragged() {
@@ -154,15 +164,13 @@ void mouseDragged() {
   if (mouseYEnd < height / 2 + (ballSize / 2)) {
     throwFalsy = true;
     return;
-  } else if (mouseYEnd == mouseYStart) {
+  } else if (mouseYEnd == mouseYStart || ballThrown) {
     return;
   }
 
   throwingStrength = mouseYStart - mouseYEnd;
-
-  strokeCap(ROUND);
-  line(mouseX, mouseYStart, mouseX, mouseYEnd);
-  strokeCap(PROJECT);
+  fill(255);
+  text(throwingStrength, mouseX + 10, mouseYEnd - 10);
 }
 
 void mouseReleased() {
@@ -170,15 +178,15 @@ void mouseReleased() {
     gesamtpunktzahl -= 5;
     throwFalsy = false;
     return;
-  }// else if (ballThrown) {
-  //   return;
-  // }
+  } else if (ballThrown) {
+    return;
+  }
 
   mouseYTemp = mouseY;
   mouseXTemp = mouseX;
   anzahlVersuche++;
 
-  movementSpeed = throwingStrength * 0.4;
+  movementSpeed = throwingStrength * 0.3;
   ballThrown = true;
 }
 
@@ -194,6 +202,7 @@ void drawBall() {
   fill(255, 0, 0);
   
   if (ballThrown) {
+    println("Ball thrown");
     throwBall();
   } else {
     image(ball, mouseX - ballSize / 2, mouseY - ballSize / 2, ballSize, ballSize);
