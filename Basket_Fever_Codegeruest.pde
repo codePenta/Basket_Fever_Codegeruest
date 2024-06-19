@@ -184,7 +184,7 @@ void mouseReleased() {
 
 void drawBall() {
 
-  if (mouseY < (height / 2 + (ballSize / 2)) && !mousePressed && !ballThrown) {
+  if (mouseY < (height / 2) && !mousePressed && !ballThrown) {
     noCursor();
     return;
   }
