@@ -12,7 +12,7 @@ int ballSize = 24;
 
 // Throw behaviour
 float damping = 0.9;
-int throwingStrenght = 50;
+int throwingStrength = 50;
 float movementSpeed;
 boolean ballThrown = false;
 boolean throwFalsy = false;
@@ -116,7 +116,7 @@ void drawText() {
   textSize(14);
   text("Anzahl Versuche: " + anzahlVersuche, 10, 550);
   text("Punktzahl: " + gesamtpunktzahl, 10, 570);
-  text("Wurfstärke: " + throwingStrenght, 10, 590);
+  text("Wurfstärke: " + throwingStrength, 10, 590);
 }
 
 void calculateDistance() {
@@ -131,13 +131,13 @@ void calculateDistance() {
 }
 
 void keyPressed() {
-  if (key == '+' && throwingStrenght <= 100) {
-    throwingStrenght++;
-  } else if (key == '-'  && throwingStrenght >= 0) {
-    throwingStrenght--;
+  if (key == '+' && throwingStrength <= 100) {
+    throwingStrength++;
+  } else if (key == '-'  && throwingStrength >= 0) {
+    throwingStrength--;
   } else if (key == 'n') {
     ballThrown = false;
-    throwingStrenght = 50;
+    throwingStrength = 50;
   }
 }
 
@@ -151,13 +151,14 @@ void mousePressed() {
 void mouseDragged() {
   mouseYEnd = mouseY;
 
-  if (mouseYEnd > mouseYStart) {
+  if (mouseYEnd < height / 2 + (ballSize / 2)) {
+    throwFalsy = true;
     return;
   } else if (mouseYEnd == mouseYStart) {
     return;
   }
 
-  throwingStrenght = mouseYStart - mouseYEnd;
+  throwingStrength = mouseYStart - mouseYEnd;
 
   strokeCap(ROUND);
   line(mouseX, mouseYStart, mouseX, mouseYEnd);
@@ -168,15 +169,16 @@ void mouseReleased() {
   if (throwFalsy) {
     gesamtpunktzahl -= 5;
     throwFalsy = false;
-  } else if (ballThrown) {
     return;
-  }
+  }// else if (ballThrown) {
+  //   return;
+  // }
 
   mouseYTemp = mouseY;
   mouseXTemp = mouseX;
   anzahlVersuche++;
 
-  movementSpeed = throwingStrenght * 0.4;
+  movementSpeed = throwingStrength * 0.4;
   ballThrown = true;
 }
 
@@ -199,8 +201,7 @@ void drawBall() {
 }
 
 void throwBall() {
-  println(movementSpeed);
-  if (movementSpeed < 0.4) {
+  if (movementSpeed < 0.5) {
     movementSpeed = 0;
   } else {
     if (mouseYTemp < 0) {
