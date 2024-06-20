@@ -76,7 +76,7 @@ void setup() {
 void draw() {
 
   // Setting the background image
-  image(background, 0, 0, 400, 600);
+  image(background, 0, 0, width, height);
 
   // Dimming the background
   fill(0, 0, 0, 160);
@@ -135,15 +135,15 @@ void drawText() {
 }
 
 void calculateDistance() {
-   for (int i = 0; i < circles.size(); i++) {    
+   for (Basket basket : circles) {    
 
-    if (circles.get(i).detectHit(mouseXTemp, mouseYTemp) && verticalSpeed < 0.1) {
+    if (basket.detectHit(mouseXTemp, mouseYTemp) && verticalSpeed < 0.1) {
+      println(scored);
       if (scored) {
         return;
       }
 
-      println("Hit detected on ball " + circles.get(i).areaText);
-      gesamtpunktzahl += int(circles.get(i).areaText);
+      gesamtpunktzahl += int(basket.areaText);
       scored = true;
      }
    }
@@ -152,10 +152,12 @@ void calculateDistance() {
 void keyPressed() {
   if (key == '+' && throwingStrength <= 100) {
     throwingStrength++;
-  } else if (key == '-'  && throwingStrength >= 0) {
+  } else if (key == '-' && throwingStrength >= 0) {
     throwingStrength--;
   } else if (key == 'n') {
     ballThrown = false;
+    mouseXTemp = 0;
+    mouseYTemp = 0;
     scored = false;
     throwingStrength = 50;
   }
