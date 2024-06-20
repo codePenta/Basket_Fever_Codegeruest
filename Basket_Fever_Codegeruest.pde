@@ -26,13 +26,13 @@ PImage goal;
 
 // Circles for the goal
 
-Basket circleTopLeft;
-Basket circleTopRight;
-Basket circleFiftee;
-Basket circleSixtee;
-Basket circleThirtee;
+Basket basketTopLeft;
+Basket basketTopRight;
+Basket basketFiftee;
+Basket basketSixtee;
+Basket basketThirtee;
 
-ArrayList<Basket> circles = new ArrayList<Basket>();
+ArrayList<Basket> baskets = new ArrayList<Basket>();
 
 class Basket {
   int areaSize;
@@ -103,26 +103,26 @@ void draw() {
 
 void drawCircles() {
   
-  circleTopLeft = new Basket(100, 50, 50, "100");
-  circleTopLeft.display();
+  basketTopLeft = new Basket(100, 50, 50, "100");
+  basketTopLeft.display();
   
-  circleTopRight = new Basket(300, 50, 50, "100");
-  circleTopRight.display();
+  basketTopRight = new Basket(300, 50, 50, "100");
+  basketTopRight.display();
   
-  circleFiftee = new Basket(197, 105, 50, "50");
-  circleFiftee.display();
+  basketFiftee = new Basket(197, 105, 50, "50");
+  basketFiftee.display();
   
-  circleSixtee = new Basket(197, 175, 50, "40");
-  circleSixtee.display();
+  basketSixtee = new Basket(197, 175, 50, "40");
+  basketSixtee.display();
   
-  circleThirtee = new Basket(197, 245, 50, "30");
-  circleThirtee.display();
+  basketThirtee = new Basket(197, 245, 50, "30");
+  basketThirtee.display();
 
-  circles.add(circleTopLeft);
-  circles.add(circleTopRight);
-  circles.add(circleFiftee);
-  circles.add(circleSixtee);
-  circles.add(circleThirtee);
+  baskets.add(basketTopLeft);
+  baskets.add(basketTopRight);
+  baskets.add(basketFiftee);
+  baskets.add(basketSixtee);
+  baskets.add(basketThirtee);
 }
 
 void drawText() {
@@ -135,10 +135,9 @@ void drawText() {
 }
 
 void calculateDistance() {
-   for (Basket basket : circles) {    
+   for (Basket basket : baskets) {    
 
     if (basket.detectHit(mouseXTemp, mouseYTemp) && verticalSpeed < 0.1) {
-      println(scored);
       if (scored) {
         return;
       }
