@@ -1,7 +1,7 @@
 // Game properties
 int gesamtpunktzahl = 0;
 int anzahlVersuche = 0;
-
+boolean scored = false;
 
 // Ball properties
 int mouseYStart;
@@ -18,28 +18,28 @@ boolean ballThrown = false;
 boolean throwFalsy = false;
 
 // Assets
-
 PFont font;
 PImage background;
 PImage ball;
 PImage goal;
 
 // Circles for the goal
-Circle circleTopLeft;
-Circle circleTopRight;
-Circle circleFiftee;
-Circle circleSixtee;
-Circle circleThirtee;
 
-ArrayList<Circle> circles = new ArrayList<Circle>();
+Basket circleTopLeft;
+Basket circleTopRight;
+Basket circleFiftee;
+Basket circleSixtee;
+Basket circleThirtee;
 
-class Circle {
+ArrayList<Basket> circles = new ArrayList<Basket>();
+
+class Basket {
   int areaSize;
   int areaPositionX;
   int areaPositionY;
   String areaText;
   
-  Circle(int x, int y, int size, String text) {
+  Basket(int x, int y, int size, String text) {
     areaPositionX = x;
     areaPositionY = y;
     areaSize = size;
@@ -49,7 +49,8 @@ class Circle {
   
   boolean detectHit(int ballX, int ballY) {
     int circleRadius = areaSize / 2;
-    return dist(areaPositionX, areaPositionY, ballX, ballY) <= circleRadius;
+    float distance = dist(areaPositionX, areaPositionY, ballX, ballY);
+    return distance <= circleRadius;
   }
   
   void display() {
@@ -72,8 +73,12 @@ void setup() {
 }
 
 void draw() {
+
+  // Setting the background image
   image(background, 0, 0, 400, 600);
-  fill(0, 0, 0, 180);
+
+  // Dimming the background
+  fill(0, 0, 0, 160);
   rect(0, 0, width, height);
 
   // zielwurfzonen
@@ -97,21 +102,21 @@ void draw() {
 
 void drawCircles() {
   
-  circleTopLeft = new Circle(100, 50, 50, "100");
+  circleTopLeft = new Basket(100, 50, 50, "100");
   circleTopLeft.display();
   
-  circleTopRight = new Circle(300, 50, 50, "100");
+  circleTopRight = new Basket(300, 50, 50, "100");
   circleTopRight.display();
   
-  circleFiftee = new Circle(197, 105, 50, "50");
+  circleFiftee = new Basket(197, 105, 50, "50");
   circleFiftee.display();
   
-  circleSixtee = new Circle(197, 175, 50, "40");
+  circleSixtee = new Basket(197, 175, 50, "40");
   circleSixtee.display();
   
-  circleThirtee = new Circle(197, 245, 50, "30");
+  circleThirtee = new Basket(197, 245, 50, "30");
   circleThirtee.display();
-  
+
   circles.add(circleTopLeft);
   circles.add(circleTopRight);
   circles.add(circleFiftee);
@@ -129,12 +134,16 @@ void drawText() {
 }
 
 void calculateDistance() {
-   for (int i = 0; i < circles.size(); i++) {
-     if (circles.get(i).detectHit(mouseXTemp, mouseYTemp) && ballThrown && movementSpeed < 0.1) {
-        println("Hit detected on ball " + circles.get(i).areaText);
-        gesamtpunktzahl += int(circles.get(i).areaText);
-        ballThrown = false;
+   for (int i = 0; i < circles.size(); i++) {    
+
+    if (circles.get(i).detectHit(mouseXTemp, mouseYTemp) && movementSpeed < 0.1) {
+      if (scored) {
         return;
+      }
+
+      println("Hit detected on ball " + circles.get(i).areaText);
+      gesamtpunktzahl += int(circles.get(i).areaText);
+      scored = true;
      }
    }
 }
@@ -146,16 +155,18 @@ void keyPressed() {
     throwingStrength--;
   } else if (key == 'n') {
     ballThrown = false;
+    scored = false;
     throwingStrength = 50;
   }
 }
 
 void mousePressed() {
   if (mouseY < height / 2 + (ballSize / 2)) {
+    throwFalsy = true;
     return;
   }
-  mouseYStart = mouseY;
   
+  mouseYStart = mouseY;
 }
 
 void mouseDragged() {
@@ -192,17 +203,13 @@ void mouseReleased() {
 
 void drawBall() {
 
-  if (mouseY < (height / 2) && !mousePressed && !ballThrown) {
-    noCursor();
+  if (mouseY < (height / 2) && !ballThrown) {
     return;
   }
 
-  cursor();
-  
   fill(255, 0, 0);
   
-  if (ballThrown) {
-    println("Ball thrown");
+  if (ballThrown && !throwFalsy) {
     throwBall();
   } else {
     image(ball, mouseX - ballSize / 2, mouseY - ballSize / 2, ballSize, ballSize);
@@ -220,6 +227,6 @@ void throwBall() {
     movementSpeed -= movementSpeed / abs(movementSpeed) * damping;
     mouseYTemp -= movementSpeed;
   }
-  
+
   image(ball, mouseXTemp  - ballSize / 2, mouseYTemp  - ballSize / 2, ballSize, ballSize);
 }
