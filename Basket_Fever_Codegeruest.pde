@@ -6,6 +6,7 @@ boolean scored = false;
 // Ball properties
 int mouseYStart;
 int mouseYEnd;
+
 int mouseXTemp;
 int mouseYTemp;
 int ballSize = 24;
@@ -13,7 +14,7 @@ int ballSize = 24;
 // Throw behaviour
 float damping = 0.9;
 int throwingStrength = 50;
-float movementSpeed;
+float verticalSpeed;
 boolean ballThrown = false;
 boolean throwFalsy = false;
 
@@ -136,7 +137,7 @@ void drawText() {
 void calculateDistance() {
    for (int i = 0; i < circles.size(); i++) {    
 
-    if (circles.get(i).detectHit(mouseXTemp, mouseYTemp) && movementSpeed < 0.1) {
+    if (circles.get(i).detectHit(mouseXTemp, mouseYTemp) && verticalSpeed < 0.1) {
       if (scored) {
         return;
       }
@@ -175,6 +176,8 @@ void mouseDragged() {
   if (mouseYEnd < height / 2 + (ballSize / 2)) {
     throwFalsy = true;
     return;
+  } if (mouseYStart < mouseY) {
+    return;
   } else if (mouseYEnd == mouseYStart || ballThrown) {
     return;
   }
@@ -197,7 +200,7 @@ void mouseReleased() {
   mouseXTemp = mouseX;
   anzahlVersuche++;
 
-  movementSpeed = throwingStrength * 0.3;
+  verticalSpeed = throwingStrength * 0.3;
   ballThrown = true;
 }
 
@@ -217,15 +220,16 @@ void drawBall() {
 }
 
 void throwBall() {
-  if (movementSpeed < 0.5) {
-    movementSpeed = 0;
+  if (verticalSpeed < 0.5) {
+    verticalSpeed = 0;
   } else {
-    if (mouseYTemp < 0) {
-      movementSpeed = -abs(movementSpeed);
+    if (mouseYTemp <= ballSize) {
+      verticalSpeed *= damping;
+      mouseYTemp += verticalSpeed;
+    } else {
+      verticalSpeed -= verticalSpeed / abs(verticalSpeed) * damping;
+      mouseYTemp -= verticalSpeed;
     }
-
-    movementSpeed -= movementSpeed / abs(movementSpeed) * damping;
-    mouseYTemp -= movementSpeed;
   }
 
   image(ball, mouseXTemp  - ballSize / 2, mouseYTemp  - ballSize / 2, ballSize, ballSize);
