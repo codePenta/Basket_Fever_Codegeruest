@@ -136,9 +136,8 @@ void drawText() {
 
 void calculateDistance() {
    for (int i = 0; i < circles.size(); i++) {    
-
     if (circles.get(i).detectHit(mouseXTemp, mouseYTemp) && verticalSpeed < 0.1) {
-      if (scored) {
+      if (scored || ballThrown) {
         return;
       }
 
@@ -224,13 +223,16 @@ void throwBall() {
     verticalSpeed = 0;
   } else {
     if (mouseYTemp <= ballSize) {
+      println("Test");
       verticalSpeed *= damping;
       mouseYTemp += verticalSpeed;
-    } else {
-      verticalSpeed -= verticalSpeed / abs(verticalSpeed) * damping;
-      mouseYTemp -= verticalSpeed;
+      return;
     }
+
+    verticalSpeed -= verticalSpeed / abs(verticalSpeed) * damping;
+    mouseYTemp -= verticalSpeed;
   }
+  
 
   image(ball, mouseXTemp  - ballSize / 2, mouseYTemp  - ballSize / 2, ballSize, ballSize);
 }
