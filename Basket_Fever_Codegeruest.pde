@@ -1,6 +1,6 @@
 // Game properties
-int gesamtpunktzahl = 0;
-int anzahlVersuche = 0;
+int scoreTotal = 0;
+int amountAttempts = 0;
 boolean scored = false;
 
 // Ball properties
@@ -24,8 +24,7 @@ PImage background;
 PImage ball;
 PImage goal;
 
-// Circles for the goal
-
+// Baskets
 Basket basketTopLeft;
 Basket basketTopRight;
 Basket basketFiftee;
@@ -129,8 +128,8 @@ void drawText() {
   fill(255);
   
   textSize(14);
-  text("Anzahl Versuche: " + anzahlVersuche, 10, 550);
-  text("Punktzahl: " + gesamtpunktzahl, 10, 570);
+  text("Anzahl Versuche: " + amountAttempts, 10, 550);
+  text("Punktzahl: " + scoreTotal, 10, 570);
   text("Wurfstärke: " + throwingStrength, 10, 590);
 }
 
@@ -142,7 +141,7 @@ void calculateDistance() {
         return;
       }
 
-      gesamtpunktzahl += int(basket.areaText);
+      scoreTotal += int(basket.areaText);
       scored = true;
      }
    }
@@ -190,7 +189,7 @@ void mouseDragged() {
 
 void mouseReleased() {
   if (throwFalsy) {
-    gesamtpunktzahl -= 5;
+    scoreTotal -= 5;
     throwFalsy = false;
     return;
   } else if (ballThrown) {
@@ -199,7 +198,7 @@ void mouseReleased() {
 
   mouseYTemp = mouseY;
   mouseXTemp = mouseX;
-  anzahlVersuche++;
+  amountAttempts++;
 
   verticalSpeed = throwingStrength * 0.3;
   ballThrown = true;
