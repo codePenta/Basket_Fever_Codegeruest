@@ -223,13 +223,8 @@ void throwBall() {
   if (verticalSpeed < 0.5) {
     verticalSpeed = 0;
   } else {
-    if (mouseYTemp <= ballSize) {
-      verticalSpeed *= damping;
-      mouseYTemp += verticalSpeed;
-    } else {
-      verticalSpeed -= verticalSpeed / abs(verticalSpeed) * damping;
-      mouseYTemp -= verticalSpeed;
-    }
+    verticalSpeed -= verticalSpeed / abs(verticalSpeed) * damping;
+    mouseYTemp -= verticalSpeed;
   }
 
   image(ball, mouseXTemp  - ballSize / 2, mouseYTemp  - ballSize / 2, ballSize, ballSize);
